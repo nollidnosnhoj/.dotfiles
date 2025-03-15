@@ -64,6 +64,8 @@ alias v='$EDITOR'
 alias vim='$EDITOR'
 alias wifi='nmtui'
 
+alias gtk-reload='~/.config/hypr/scripts/gtk.sh'
+
 # Shell integrations
 eval "$(fzf --zsh)"
 eval "$(zoxide init --cmd cd zsh)"
