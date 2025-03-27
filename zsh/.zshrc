@@ -1,4 +1,6 @@
 export GPG_TTY=$(tty)
+export PATH="$PATH:$HOME/.dotnet/tools"
+export FPATH="$FPATH:$HOME/.config/zsh/completions"
 
 # Set the directory we want to store zinit and plugins
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
@@ -72,6 +74,3 @@ alias vim='nvim'
 alias c='clear'
 alias ls="eza --icons=always"
 alias cd="z"
-
-# Add .NET Core SDK tools
-export PATH="$PATH:$HOME/.dotnet/tools"
