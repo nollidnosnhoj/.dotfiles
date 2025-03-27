@@ -51,3 +51,5 @@ eza
 zoxide
 fzf
 unzip
+man-db
+man-pages
