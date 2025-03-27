@@ -98,8 +98,7 @@ button:hover {
 }
 
 #custom-wlogout {
-    color: @nord6;
-    font-size: 24px;
+    color: @nord11;
     border: 0;
 }
 

@@ -57,7 +57,7 @@ button:hover {
         color 0.1s ease-in;
     box-shadow: 0 0 20px 10px rgba(0, 0, 0, 0.4);
     background-color: @nord10;
-    color: transparent;
+    color: inherit;
     padding: 100px;
 }
 
