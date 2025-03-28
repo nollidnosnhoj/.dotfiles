@@ -1,2 +1,3 @@
 --ignore=packages_aur.txt
 --ignore=packages_pacman.txt
+--ignore=~/wallpapers/.cache/*

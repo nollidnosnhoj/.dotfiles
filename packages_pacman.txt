@@ -36,6 +36,7 @@ nwg-displays
 waybar
 swww
 waypaper
+imagemagick
 hypridle
 hyprlock
 oh-my-posh
