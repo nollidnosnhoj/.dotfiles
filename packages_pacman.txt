@@ -54,3 +54,4 @@ fzf
 unzip
 man-db
 man-pages
+udiskie
