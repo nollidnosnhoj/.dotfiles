@@ -1,3 +1,5 @@
 --ignore=packages_aur.txt
+--ignore=.stowrc
+--ignore=.gitignore
 --ignore=packages_pacman.txt
---ignore=wallpapers/wallpapers/.cache/*
+--ignore=wallpapers/wallpapers/*

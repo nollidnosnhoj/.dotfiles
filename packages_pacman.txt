@@ -39,6 +39,7 @@ waypaper
 imagemagick
 hypridle
 hyprlock
+hyprshade
 oh-my-posh
 qt5ct
 qt6ct

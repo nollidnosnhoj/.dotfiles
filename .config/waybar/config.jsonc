@@ -11,8 +11,24 @@
     "custom/wlogout",
   ],
   "clock": {
-    "format": "<span foreground='#88c0d0'>󰃭  </span>{:%b %d %H:%M}",
+    "format": "󰃭  {:%b %d %H:%M}",
     "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+    "on-click": "swaync-client -t -sw",
+    "calendar": {
+      "mode": "month",
+      "mode-mon-col": 3,
+      "on-scroll": 1,
+      "on-click-right": "mode",
+      "format": {
+        "months": "<span color='#ffead3'><b>{}</b></span>",
+        "weekdays": "<span color='#ffcc66'><b>{}</b></span>",
+        "today": "<span color='#ff6699'><b>{}</b></span>",
+      },
+    },
+    "actions": {
+      "on-scroll-up": "shift_up",
+      "on-scroll-down": "shift_down",
+    },
   },
   "battery": {
     "states": {
@@ -39,19 +55,30 @@
   //   "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{device_enumerate}",
   // },
   "network": {
-    "format-wifi": "<span size='13000' foreground='#88c0d0'> </span>",
-    "format-ethernet": "<span size='13000' foreground='#88c0d0'>󰈀 </span> ",
+    "format-wifi": " ",
+    "format-ethernet": "󰈀 ",
     "format-linked": "{ifname} (No IP) ",
-    "format-disconnected": "<span size='13000' foreground='#88c0d0'>󰤭 /span>",
+    "format-disconnected": "󰤭 ",
     "tooltip-format-wifi": "{essid}: {signalStrength}%",
   },
   "pulseaudio": {
-    "format": "{icon}  {volume}%",
-    "format-muted": "",
+    "scroll-step": 5,
+    "format": "{volume}%  {icon}  {format_source}",
+    "format-bluetooth": "{volume}%  {icon}  {format_source}",
+    "format-bluetooth-muted": "󰖁  {icon}  {format_source}",
+    "format-muted": "󰖁  {format_source}",
+    "format-source": "",
+    "format-source-muted": "",
     "format-icons": {
-      "default": ["", "", " "],
+      "headphone": "",
+      "hands-free": "",
+      "headset": "",
+      "phone": "",
+      "portable": "",
+      "car": "",
+      "default": ["", "", ""],
     },
-    "on-click": "pavucontrol",
+    "on-click": "pavucontrol -t 3",
   },
   "hyprland/workspaces": {
     "format": "{}",
