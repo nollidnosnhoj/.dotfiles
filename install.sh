@@ -125,10 +125,10 @@ echo "Enabling bluetooth service..."
 sudo systemctl enable --now bluetooth
 
 echo "Enabling firewall service..."
-sudo systemctl enable --now ufw
+sudo systemctl enable --now ufws
 
 echo "Enabling SwayOSD Libinput Backend service..."
-sudo systemctl enable --now swayos-libinput-backend.service
+sudo systemctl enable --now swayosd-libinput-backend.service
 
 chmod +x ./.config/hypr/scripts/*.sh
 
@@ -136,6 +136,11 @@ echo "Installing stow..."
 sudo pacman -S --needed stow
 
 symlink_dotfiles "$HOME/.dotfiles" "$HOME"
+
+# copy wallpapers
+echo "Copying default wallpapers"
+mkdir -p ~/wallpapers
+cp -r ./wallpapers/* ~/wallpapers
 
 echo "Adding user to input group..."
 sudo usermod -a -G input "$USER"
