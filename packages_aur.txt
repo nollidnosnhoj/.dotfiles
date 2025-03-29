@@ -1,6 +1,0 @@
-wlogout
-papirus-icons-theme-git
-bibata-cursor-theme-bin
-gowall
-swayosd-git
-clipse
