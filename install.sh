@@ -99,7 +99,7 @@ PACKAGES=(
 
 AUR_PACKAGES=(
     wlogout papirus-icons-theme-git bibata-cursor-theme-bin gowall swayosd-git
-    clipse grimblast-git waypaper ulauncher-git
+    clipse grimblast-git waypaper ulauncher-git flameshot-git
 )
 
 echo "Installing my dotfiles..."
