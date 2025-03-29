@@ -121,6 +121,9 @@ echo "Installing required packages..."
 sudo pacman -S --needed "${PACKAGES[@]}"
 yay -S --needed "${YAY_PACKAGES[@]}"
 
+echo "Enabling network manager service..."
+sudo systemctl enable --now NetworkManager.service
+
 echo "Enabling bluetooth service..."
 sudo systemctl enable --now bluetooth
 

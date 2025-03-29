@@ -4,10 +4,11 @@
   "modules-center": ["hyprland/window"],
   "modules-right": [
     "tray",
-    "network",
     "pulseaudio",
     "battery",
+    "backlight",
     "clock",
+    "idle_inhibitor",
     "custom/wlogout",
   ],
   "clock": {
@@ -29,6 +30,12 @@
       "on-scroll-up": "shift_up",
       "on-scroll-down": "shift_down",
     },
+  },
+  "backlight": {
+    "scroll-step": 10.0,
+    "tooltip": false,
+    "format": "{icon} {percent}%",
+    "format-icons": ["", "", "", "", "", "", "", "", ""],
   },
   "battery": {
     "states": {
@@ -107,6 +114,15 @@
   "tray": {
     "icon-size": 21,
     "spacing": 10,
+  },
+  "idle_inhibitor": {
+    "format": "{icon}",
+    "format-icons": {
+      "activated": " ",
+      "deactivated": " ",
+    },
+    "tooltip-format-activated": "The computer is prevented from going to sleep",
+    "tooltip-format-deactivated": "The computer will go to sleep if the user is idle",
   },
   "custom/wlogout": {
     "format": "⏻ ",

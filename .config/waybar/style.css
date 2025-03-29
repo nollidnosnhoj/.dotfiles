@@ -87,6 +87,7 @@ button:hover {
 #bluetooth,
 #mode,
 #scratchpad,
+#idle_inhibitor,
 #custom-wlogout {
     margin-top: 2px;
     margin-bottom: 2px;
