@@ -62,6 +62,30 @@ install_amd() {
     yay -S lact
 }
 
+# Symlink dotfiles using GNU Stow
+symlink_dotfiles() {
+  local source_dir="$1"
+  local target_dir="${2:-$HOME}"
+  local log_file="${3:-stow_output.log}"
+
+  echo "Symlinking dotfiles from $source_dir to $target_dir..."
+
+  if [ ! -d $source_dir ]; then
+      mkdir -p $source_dir
+  fi
+
+  # Run stow and capture output
+  stow -v -t "$target_dir" . 2>&1 | tee "$log_file"
+
+  # Check exit status
+  if [[ ${PIPESTATUS[0]} -ne 0 ]]; then
+      echo "Stow failed to symlink files. Check $logfile for details"
+      exit
+  fi
+
+  echo "Dotfiles symlinked successfully"
+}
+
 PACKAGES=(
     git ufw bluez bluez-utils pavucontrol gst-plugin-pipewire piprewire pipewire-alsa
     pipewire-audio pipewire-jack pipewire-pulse wireplumber networkmanager
@@ -111,8 +135,7 @@ chmod +x ./.config/hypr/scripts/*.sh
 echo "Installing stow..."
 sudo pacman -S --needed stow
 
-echo "Symlinking dotfiles..."
-stow .
+symlink_dotfiles "$HOME/.dotfiles" "$HOME"
 
 echo "Adding user to input group..."
 sudo usermod -a -G input "$USER"
