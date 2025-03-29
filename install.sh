@@ -99,7 +99,7 @@ PACKAGES=(
 
 AUR_PACKAGES=(
     wlogout papirus-icons-theme-git bibata-cursor-theme-bin gowall swayosd-git
-    clipse grimblast-git waypaper
+    clipse grimblast-git waypaper ulauncher-git
 )
 
 echo "Installing my dotfiles..."
@@ -133,6 +133,8 @@ sudo systemctl enable --now ufws
 echo "Enabling SwayOSD Libinput Backend service..."
 sudo systemctl enable --now swayosd-libinput-backend.service
 
+echo "Enabling ULauncher service..."
+systemctl --user enable --now ulauncher
 chmod +x ./.config/hypr/scripts/*.sh
 
 echo "Installing stow..."

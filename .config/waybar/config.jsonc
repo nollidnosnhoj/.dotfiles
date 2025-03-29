@@ -4,6 +4,7 @@
   "modules-center": ["hyprland/window"],
   "modules-right": [
     "tray",
+    "network",
     "pulseaudio",
     "battery",
     "backlight",
@@ -67,6 +68,7 @@
     "format-linked": "{ifname} (No IP) ",
     "format-disconnected": "󰤭 ",
     "tooltip-format-wifi": "{essid}: {signalStrength}%",
+    "on-click": "kitty --class nmtui -e nmtui",
   },
   "pulseaudio": {
     "scroll-step": 5,
