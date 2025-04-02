@@ -87,9 +87,9 @@ symlink_dotfiles() {
 }
 
 PACKAGES=(
-    git ufw bluez bluez-utils pavucontrol gst-plugin-pipewire piprewire pipewire-alsa
+    git ufw bluez bluez-utils pavucontrol gst-plugin-pipewire pipewire pipewire-alsa
     pipewire-audio pipewire-jack pipewire-pulse wireplumber networkmanager
-    network-manager-applet nmcli nmtui blueman brightnessctl nerd-fonts noto-fonts
+    network-manager-applet blueman brightnessctl nerd-fonts noto-fonts
     noto-fonts-emoji thunar swaync grim hyprland kitty polkit-kde-agent qt5-wayland
     qt6-wayland slurp wofi rofi-wayland xdg-desktop-portal-hyprland xdg-desktop-portal-gtk
     nwg-look nwg-displays waybar swww imagemagick hypridle hyprlock hyprshade
@@ -98,8 +98,8 @@ PACKAGES=(
 )
 
 AUR_PACKAGES=(
-    wlogout papirus-icons-theme-git bibata-cursor-theme-bin gowall swayosd-git
-    clipse grimblast-git waypaper ulauncher-git flameshot-git
+    wlogout papirus-icon-theme-git bibata-cursor-theme-bin gowall swayosd-git
+    clipse grimblast-git waypaper flameshot-git
 )
 
 echo "Installing my dotfiles..."
@@ -117,9 +117,10 @@ enable_chaotic_aur
 echo "Reducing package compression time..."
 sudo sed -i 's/COMPRESSZST=(zstd -c -T0 --ultra -20 -)/COMPRESSZST=(zstd -c -T0 --fast -)/' /etc/makepkg.conf
 
-echo "Installing required packages..."
+echo "Installing required packages using pacman..."
 sudo pacman -S --needed "${PACKAGES[@]}"
-yay -S --needed "${YAY_PACKAGES[@]}"
+echo "Installing required packages from AUR using yay..."
+yay -S --needed "${AUR_PACKAGES[@]}"
 
 echo "Enabling network manager service..."
 sudo systemctl enable --now NetworkManager.service
@@ -128,14 +129,10 @@ echo "Enabling bluetooth service..."
 sudo systemctl enable --now bluetooth
 
 echo "Enabling firewall service..."
-sudo systemctl enable --now ufws
+sudo systemctl enable --now ufw
 
 echo "Enabling SwayOSD Libinput Backend service..."
 sudo systemctl enable --now swayosd-libinput-backend.service
-
-echo "Enabling ULauncher service..."
-systemctl --user enable --now ulauncher
-chmod +x ./.config/hypr/scripts/*.sh
 
 echo "Installing stow..."
 sudo pacman -S --needed stow
