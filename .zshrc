@@ -1,39 +1,4 @@
 export GPG_TTY=$(tty)
-export PATH="$PATH:$HOME/.dotnet/tools"
-export FPATH="$FPATH:$HOME/.config/zsh/completions"
-
-# Set the directory we want to store zinit and plugins
-ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
-
-# Download Zinit, if it's not there yet
-if [ ! -d "$ZINIT_HOME" ]; then
-   mkdir -p "$(dirname $ZINIT_HOME)"
-   git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
-fi
-
-# Source/Load zinit
-source "${ZINIT_HOME}/zinit.zsh"
-
-# Add in zsh plugins
-zinit light zsh-users/zsh-syntax-highlighting
-zinit light zsh-users/zsh-completions
-zinit light zsh-users/zsh-autosuggestions
-zinit light Aloxaf/fzf-tab
-
-# Add in snippets
-zinit snippet OMZL::git.zsh
-zinit snippet OMZP::git
-zinit snippet OMZP::sudo
-zinit snippet OMZP::archlinux
-zinit snippet OMZP::command-not-found
-zinit snippet OMZP::docker
-zinit snippet OMZP::kubectl
-zinit snippet OMZP::kubectx
-
-# Load completions
-autoload -Uz compinit && compinit
-
-zinit cdreplay -q
 
 # Add OMP prompt
 eval "$(oh-my-posh init zsh --config ~/.config/oh-my-posh/zen.toml)"
@@ -67,7 +32,7 @@ zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 # Shell integrations
 eval "$(fzf --zsh)"
 eval "$(zoxide init zsh)"
-eval "$(fnm env --use-on-cd)"
+# eval "$(fnm env --use-on-cd)"
 
 # Aliases
 alias vim='nvim'
