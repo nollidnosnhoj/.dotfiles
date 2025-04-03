@@ -92,7 +92,7 @@ PACKAGES=(
     network-manager-applet blueman brightnessctl nerd-fonts noto-fonts
     noto-fonts-emoji thunar swaync grim hyprland kitty polkit-kde-agent qt5-wayland
     qt6-wayland slurp wofi rofi-wayland xdg-desktop-portal-hyprland xdg-desktop-portal-gtk
-    nwg-look nwg-displays waybar swww imagemagick hypridle hyprlock hyprshade
+    sddm nwg-look nwg-displays waybar swww imagemagick hypridle hyprlock hyprshade
     oh-my-posh qt5ct qt6ct zsh zen-browser code zed neovim lazygit eza zoxide fzf unzip
     man-db man-pages udiskie
 )
@@ -130,6 +130,9 @@ sudo systemctl enable --now bluetooth
 
 echo "Enabling firewall service..."
 sudo systemctl enable --now ufw
+
+echo "Enabling SDDM service..."
+sudo systemctl enable --now sddm.service
 
 echo "Enabling SwayOSD Libinput Backend service..."
 sudo systemctl enable --now swayosd-libinput-backend.service
