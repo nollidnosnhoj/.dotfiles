@@ -86,13 +86,36 @@ symlink_dotfiles() {
   echo "Dotfiles symlinked successfully"
 }
 
+install_sddm() {
+    echo "installing sddm and theme dependencies..."
+    sudo pacman -S --needed sddm qt6-svg qt6-virtualkeyboard qt6-multimedia-ffmpeg
+    echo "setting up sddm theme..."
+    sudo git clone -b master --depth 1 https://github.com/keyitdev/sddm-astronaut-theme.git /usr/share/sddm/themes/sddm-astronaut-theme
+    sudo cp -r /usr/share/sddm/themes/sddm-astronaut-theme/Fonts/* /usr/share/fonts/
+
+    sudo cp ./sddm/sddm.conf /etc/sddm.conf
+    sudo cp ./sddm/theme.conf /usr/share/sddm/themes/sddm-astronaut-theme/Themes/astronaut-nord.conf
+    sudo sed -i 's/^ConfigFile=.*$/ConfigFile=Themes\/astronaut-nord.conf/' /usr/share/sddm/themes/sddm-astronaut-theme/metadata.desktop
+
+    echo "[Theme]
+    Current=sddm-astronaut-theme" | sudo tee /etc/sddm.conf
+    if [ ! -d /etc/sddm.conf.d/ ]; then
+        sudo mkdir -p /etc/sddm.conf.d
+    fi
+    sudo touch /etc/sddm.conf.d/virtualkbd.conf
+    echo "[General]
+    InputMethod=qtvirtualkeyboard" | sudo tee /etc/sddm.conf.d/virtualkbd.conf
+    echo "Enabling sddm service backend..."
+    sudo systemctl enable --now sddm.service
+}
+
 PACKAGES=(
     git ufw bluez bluez-utils pavucontrol gst-plugin-pipewire pipewire pipewire-alsa
     pipewire-audio pipewire-jack pipewire-pulse wireplumber networkmanager
     network-manager-applet blueman brightnessctl nerd-fonts noto-fonts
     noto-fonts-emoji thunar swaync grim hyprland kitty polkit-kde-agent qt5-wayland
     qt6-wayland slurp wofi rofi-wayland xdg-desktop-portal-hyprland xdg-desktop-portal-gtk
-    sddm nwg-look nwg-displays waybar swww imagemagick hypridle hyprlock hyprshade
+    nwg-look nwg-displays waybar swww imagemagick hypridle hyprlock hyprshade
     oh-my-posh qt5ct qt6ct zsh zen-browser code zed neovim lazygit eza zoxide fzf unzip
     man-db man-pages udiskie
 )
@@ -131,9 +154,6 @@ sudo systemctl enable --now bluetooth
 echo "Enabling firewall service..."
 sudo systemctl enable --now ufw
 
-echo "Enabling SDDM service..."
-sudo systemctl enable --now sddm.service
-
 echo "Enabling SwayOSD Libinput Backend service..."
 sudo systemctl enable --now swayosd-libinput-backend.service
 
@@ -141,6 +161,8 @@ echo "Installing stow..."
 sudo pacman -S --needed stow
 
 symlink_dotfiles "$HOME/.dotfiles" "$HOME"
+
+install_sddm
 
 # copy wallpapers
 echo "Copying default wallpapers"

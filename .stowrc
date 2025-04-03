@@ -2,3 +2,4 @@
 --ignore=.gitignore
 --ignore=install.sh
 --ignore=wallpapers
+--ignore=sddm
