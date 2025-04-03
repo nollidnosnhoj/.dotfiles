@@ -95,6 +95,7 @@ install_sddm() {
 
     sudo cp ./sddm/sddm.conf /etc/sddm.conf
     sudo cp ./sddm/theme.conf /usr/share/sddm/themes/sddm-astronaut-theme/Themes/astronaut-nord.conf
+    sudo cp ./wallpapers/default-wallpaper.png /usr/share/sddm/themes/sddm-astronaut-theme/Backgrounds/nord-d2-beyond-light.png
     sudo sed -i 's/^ConfigFile=.*$/ConfigFile=Themes\/astronaut-nord.conf/' /usr/share/sddm/themes/sddm-astronaut-theme/metadata.desktop
 
     echo "[Theme]
