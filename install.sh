@@ -127,12 +127,12 @@ PACKAGES=(
     qt6-wayland slurp wofi rofi-wayland xdg-desktop-portal-hyprland xdg-desktop-portal-gtk
     nwg-look nwg-displays waybar swww imagemagick hypridle hyprlock hyprshade
     oh-my-posh qt5ct qt6ct zsh zen-browser code zed neovim lazygit eza zoxide fzf unzip
-    man-db man-pages udiskie
+    man-db man-pages udiskie go
 )
 
 AUR_PACKAGES=(
     wlogout papirus-icon-theme-git bibata-cursor-theme-bin gowall swayosd-git
-    clipse grimblast-git waypaper flameshot-git
+    clipse grimblast-git waypaper fnm
 )
 
 if [ $CURRENT_DIR != $HOME/.dotfiles ]; then

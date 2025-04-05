@@ -32,7 +32,7 @@ zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 # Shell integrations
 eval "$(fzf --zsh)"
 eval "$(zoxide init zsh)"
-# eval "$(fnm env --use-on-cd)"
+eval "$(fnm env --use-on-cd)"
 
 # Aliases
 alias vim='nvim'
