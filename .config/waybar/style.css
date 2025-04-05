@@ -19,7 +19,7 @@
 @define-color nord15 #b48ead;
 
 * {
-    font-family: "MesloLGS Nerd Font Mono Bold";
+    font-family: "Noto Sans Nerd Font";
     font-size: 16px;
     min-height: 0;
     font-weight: bold;

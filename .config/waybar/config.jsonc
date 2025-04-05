@@ -4,8 +4,6 @@
   "modules-center": ["hyprland/window"],
   "modules-right": [
     "tray",
-    "network",
-    "bluetooth",
     "pulseaudio",
     "battery",
     "backlight",
