@@ -1,5 +1,8 @@
 #!/bin/bash
 
+CURRENT_DIR=$(pwd)
+TEMP_DIR=$CURRENT_DIR/_tmp/
+
 # Function to ask yes or no questions
 ask_yes_no() {
     while true; do
@@ -110,6 +113,12 @@ install_sddm() {
     sudo systemctl enable sddm.service
 }
 
+install_nord_gtk_theme() {
+    wget -O $TEMP_DIR/Nordic-darker.tar.xz https://github.com/EliverLara/Nordic/releases/download/v2.2.0/Nordic-darker.tar.xz
+    tar -xvf $TEMP_DIR/Nordic-darker.tar.xz -C $TEMP_DIR
+    sudo mv $TEMP_DIR/Nordic-darker /usr/share/themes/Nordic-darker
+}
+
 PACKAGES=(
     git ufw bluez bluez-utils pavucontrol gst-plugin-pipewire pipewire pipewire-alsa
     pipewire-audio pipewire-jack pipewire-pulse wireplumber networkmanager
@@ -125,6 +134,16 @@ AUR_PACKAGES=(
     wlogout papirus-icon-theme-git bibata-cursor-theme-bin gowall swayosd-git
     clipse grimblast-git waypaper flameshot-git
 )
+
+if [ $CURRENT_DIR != $HOME/.dotfiles ]; then
+    echo "The current directory must be in $HOME/.dotfiles"
+    exit
+fi
+
+if [ ! -d $TEMP_DIR ]; then
+    echo "Creating temp directory"
+    mkdir -p $TEMP_DIR
+fi
 
 echo "Installing my dotfiles..."
 
@@ -190,6 +209,9 @@ if ask_yes_no "Do you want to install AMD GPU drivers?"; then
 else
     echo "AMD GPU installation skipped."
 fi
+
+echo "Cleaning temp directory"
+rm -rf $TEMP_DIR
 
 # Ask about restart
 if ask_yes_no "Dotfiles successfully installed. Do you want to restart now?"; then
