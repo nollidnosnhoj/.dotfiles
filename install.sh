@@ -107,7 +107,7 @@ install_sddm() {
     echo "[General]
     InputMethod=qtvirtualkeyboard" | sudo tee /etc/sddm.conf.d/virtualkbd.conf
     echo "Enabling sddm service backend..."
-    sudo systemctl enable --now sddm.service
+    sudo systemctl enable sddm.service
 }
 
 PACKAGES=(
