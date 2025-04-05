@@ -210,6 +210,9 @@ else
     echo "AMD GPU installation skipped."
 fi
 
+echo "Switch to z shell"
+chsh -s /bin/zsh
+
 echo "Cleaning temp directory"
 rm -rf $TEMP_DIR
 
