@@ -123,11 +123,6 @@ enabling_systemctl_services() {
 
 enabling_wallpapers() {
     local wallpaper_dir = "$HOME/wallpapers"
-    if [ ! -d $wallpaper_dir ]; then
-        mkdir -p $wallpaper_dir
-    fi
-    cp -r $DOTFILES_DIR/wallpapers/* $wallpaper_dir
-    
     local default_wallpaper_path = $wallpaper_dir/default_wallpaper.jpg
     
     if [ -f $default_wallpaper_path ]; then
