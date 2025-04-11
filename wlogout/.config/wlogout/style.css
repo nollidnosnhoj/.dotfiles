@@ -1,0 +1,86 @@
+@define-color nord0 #2e3440;
+@define-color nord1 #3b4252;
+@define-color nord2 #434c5e;
+@define-color nord3 #4c566a;
+
+@define-color nord4 #d8dee9;
+@define-color nord5 #e5e9f0;
+@define-color nord6 #eceff4;
+
+@define-color nord7 #8fbcbb;
+@define-color nord8 #88c0d0;
+@define-color nord9 #81a1c1;
+@define-color nord10 #5e81ac;
+
+@define-color nord11 #bf616a;
+@define-color nord12 #d08770;
+@define-color nord13 #ebcb8b;
+@define-color nord14 #a3be8c;
+@define-color nord15 #b48ead;
+
+* {
+    border: none;
+    outline: none;
+}
+
+window {
+    font-family: Ubuntu;
+    font-size: 16pt;
+    color: @nord6;
+    background-color: rgba(0, 0, 0, 0.4);
+    padding-top: 0;
+    padding-bottom: 0;
+    margin: 0;
+}
+
+button {
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 25%;
+    background-color: @nord0;
+    transition:
+        all 0.3s ease-in,
+        color 1s ease-in;
+    box-shadow: 0 0 10px 2px transparent;
+    border-radius: 36px;
+    margin: 10px;
+    padding: 10px;
+    color: inherit;
+}
+
+button:focus,
+button.active,
+button:hover {
+    transition:
+        all 0.3s cubic-bezier(0.55, 0, 0.28, 1.682),
+        box-shadow 0.5s ease-in,
+        color 0.1s ease-in;
+    box-shadow: 0 0 20px 10px rgba(0, 0, 0, 0.4);
+    background-color: @nord10;
+    color: inherit;
+    padding: 100px;
+}
+
+#lock {
+    background-image: image(url("./icons/lock.svg"));
+}
+
+#logout {
+    background-image: image(url("./icons/logout.svg"));
+}
+
+#suspend {
+    background-image: image(url("./icons/suspend.svg"));
+}
+
+#hibernate {
+    background-image: image(url("./icons/hibernate.svg"));
+}
+
+#shutdown {
+    background-image: image(url("./icons/shutdown.svg"));
+}
+
+#reboot {
+    background-image: image(url("./icons/reboot.svg"));
+}
