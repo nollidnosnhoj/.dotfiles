@@ -121,16 +121,6 @@ enabling_systemctl_services() {
     sudo systemctl enable --now swayosd-libinput-backend.service
 }
 
-enabling_wallpapers() {
-    local wallpaper_dir = "$HOME/wallpapers"
-    local default_wallpaper_path = $wallpaper_dir/default_wallpaper.jpg
-    
-    if [ -f $default_wallpaper_path ]; then
-        echo "Running wallpaper script on $default_wallpaper_path"
-        $XDG_CONFIG_HOME/hypr/scripts/wallpaper.sh $default_wallpaper_path
-    fi
-}
-
 main() {
     # checks if the current working directory is the correct dotfiles path...
     if [ $(pwd) != $DOTFILES_DIR ]; then
@@ -169,7 +159,6 @@ main() {
     chmod +x $DOTFILES_DIR/.config/hypr/scripts/*.sh
 
     symlink_dotfiles
-    enabling_wallpapers
 
     echo "Adding user to input group..."
     sudo usermod -a -G input "$USER"
