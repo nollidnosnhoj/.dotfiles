@@ -71,6 +71,7 @@ HYPR_PACKAGES=(
     hyprshade
     qt5ct
     qt6ct
+    kvantum
     zsh
     firefox
     man-db
