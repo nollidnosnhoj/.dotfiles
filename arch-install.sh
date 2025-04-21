@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 DOTFILES_DIR=$HOME/.dotfiles
@@ -64,7 +64,7 @@ HYPR_PACKAGES=(
     nwg-look
     nwg-displays
     waybar
-    swww
+    hyprpaper
     imagemagick
     hypridle
     hyprlock
@@ -81,14 +81,21 @@ HYPR_PACKAGES=(
 
 AUR_PACKAGES=(
     wlogout
-    papirus-icon-theme-git
-    bibata-cursor-theme-bin
     gowall
     swayosd-git
     clipse 
     grimblast-git
     waypaper
     waybar-updates
+)
+
+DEV_PACKAGES=(
+    zsh
+    oh-my-posh
+    mise
+    neovim-git
+    zoxide
+    eza
 )
 
 # Function to ask yes or no questions
@@ -171,29 +178,14 @@ symlink_dotfiles() {
 }
 
 install_gtk_themes() {
-    echo "Installing Nordic GTK Theme..."
-    wget -O $TEMP_DIR/Nordic.tar.xz https://github.com/EliverLara/Nordic/releases/download/v2.2.0/Nordic.tar.xz --quiet
-    tar -xf $TEMP_DIR/Nordic.tar.xz -C $TEMP_DIR
-    sudo mkdir -p $HOME/.themes/Nordic/
-    sudo cp -r $TEMP_DIR/Nordic $HOME/.themes/Nordic/
+    yay -S --needed papirus-icon-theme-git bibata-cursor-theme-bin 
+
+    wget -O $TEMP_DIR/Nordic.tar.xz https://github.com/EliverLara/Nordic/releases/download/v2.2.0/Nordic.tar.xz
+    tar -xvf $TEMP_DIR/Nordic.tar.xz -C $TEMP_DIR
+    sudo mv $TEMP_DIR/Nordic /usr/share/themes/Nordic
+
     gsettings set org.gnome.desktop.interface gtk-theme "Nordic"
     gsettings set org.gnome.desktop.wm.preferences theme "Nordic"
-
-    echo "Installing Bibata Modern Ice Cursor..."
-    wget -O $TEMP_DIR/Bibata-Modern-Ice.tar.xz https://github.com/ful1e5/Bibata_Cursor/releases/download/v2.0.7/Bibata-Modern-Ice.tar.xz --quiet
-    tar -xf $TEMP_DIR/Bibata-Modern-Ice.tar.xz -C $TEMP_DIR
-    sudo mkdir -p $HOME/.icons/Bibata-Modern-Ice/
-    sudo cp -r $TEMP_DIR/Bibata-Modern-Ice $HOME/.icons/Bibata-Modern-Ice/
-
-    echo "Installing Papirus Icon Themes..."
-    wget -O $TEMP_DIR/papirus-icon-theme-20250201.tar.gz https://github.com/PapirusDevelopmentTeam/papirus-icon-theme/archive/refs/tags/20250201.tar.gz --quiet
-    tar -xf $TEMP_DIR/papirus-icon-theme-20250201.tar.gz -C $TEMP_DIR
-    sudo cp -r $TEMP_DIR/papirus-icon-theme-20250201/Papirus $HOME/.icons/
-    sudo cp -r $TEMP_DIR/papirus-icon-theme-20250201/Papirus-Light $HOME/.icons/
-    sudo cp -r $TEMP_DIR/papirus-icon-theme-20250201/Papirus-Dark $HOME/.icons/
-
-    echo "Clearing tmp folder..."
-    rm -rf $TEMP_DIR/*
 }
 
 enabling_systemctl_services() {
@@ -208,6 +200,12 @@ enabling_systemctl_services() {
 
     echo "Enabling SwayOSD Libinput Backend service..."
     sudo systemctl enable --now swayosd-libinput-backend.service
+}
+
+enable_sddm() {
+    echo "Installing SDDM"
+    sudo pacman -S --needed sddm qt5-graphicaleffects qt5-quickcontrols2 qt5-svg
+    sudo systemctl enable sddm.service
 }
 
 main() {
@@ -250,23 +248,42 @@ main() {
     symlink_dotfiles
     install_gtk_themes
 
+    mkdir $HOME/wallpapers
+    cp -r $DOTFILES_DIR/wallpapers/* $HOME/wallpapers
+
     echo "Adding user to input group..."
     sudo usermod -a -G input "$USER"
     sudo gpasswd -a $USER input
 
+    echo "Installing dev-related packages from AUR using yay..."
+    yay -S --needed "${DEV_PACKAGES[@]}"
+
+    echo "Installing neovim configuration..."
+    git clone https://github.com/nollidnosnhoj/kickstart.nvim $HOME/.config/nvim
+    echo "Run 'nvim' to install neovim plugins."
+
+    echo "Switching to z-shell..."
+    chsh -s /bin/zsh
+
+    echo "Cleaning temp directory"
+    rm -rf $TEMP_DIR
+
+    enabling_systemctl_services
+    enable_sddm
+
     # Ask about using a laptop
     if ask_yes_no "Are you using a laptop?"; then
-        yay -S --needed batsignal
+        yay -S --needed batsignal fprintd pam-fprint-grosshack libinput-gestures
         systemctl --user enable batsignal.service
         systemctl --user start batsignal.service
         mkdir -p $XDG_CONFIG_HOME/systemd/user/batsignal.service.d
         printf '[Service]\nExecStart=\nExecStart=batsignal -d 5 -c 15 -w 30 -p' > $XDG_CONFIG_HOME/systemd/user/batsignal.service.d/options.conf
+
+        echo "Autostarting Libinput Gestures"
+        libinput-gestures-setup autostart
     else
         echo "Laptop installation skipped installation skipped."
     fi
-
-    echo "Cleaning temp directory"
-    rm -rf $TEMP_DIR
 
     # Ask about restart
     if ask_yes_no "Dotfiles successfully installed. Do you want to restart now?"; then

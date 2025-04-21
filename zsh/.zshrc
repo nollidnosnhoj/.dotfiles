@@ -22,6 +22,7 @@ zinit snippet OMZP::kubectl
 zinit snippet OMZP::kubectx
 zinit snippet OMZP::command-not-found
 zinit snippet OMZP::docker
+zinit snippet OMZP::mise
 
 autoload -Uz compinit && compinit
 
@@ -59,7 +60,6 @@ zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 # Shell integrations
 eval "$(fzf --zsh)"
 eval "$(zoxide init zsh)"
-eval "$(fnm env --use-on-cd)"
 
 # Aliases
 alias vim='nvim'
