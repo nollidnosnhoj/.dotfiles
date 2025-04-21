@@ -2,24 +2,93 @@
 
 XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 DOTFILES_DIR=$HOME/.dotfiles
-TEMP_DIR=$DOTFILES_DIR/_tmp/
+TEMP_DIR=$DOTFILES_DIR/.tmp
 
 STOW_PATHS="fastfetch,gowall,gtk,hypr,kitty,qt,rofi,waybar,waypaper,wlogout,wofi,zsh"
 
-PACKAGES=(
-    git firewalld bluez bluez-utils pavucontrol gst-plugin-pipewire pipewire pipewire-alsa
-    pipewire-audio pipewire-jack pipewire-pulse wireplumber networkmanager
-    network-manager-applet blueman brightnessctl 
-    ttf-hack-nerd ttf-jetbrains-mono-nerd ttf-meslo-nerd ttf-noto-nerd noto-fonts ttf-font-awesome
-    noto-fonts-emoji thunar swaync grim hyprland kitty polkit-gnome qt5-wayland qt6-wayland 
-    slurp wofi rofi-wayland xdg-desktop-portal-hyprland xdg-desktop-portal-gtk
-    nwg-look nwg-displays waybar swww imagemagick hypridle hyprlock hyprshade
-    qt5ct qt6ct zsh firefox unzip man-db man-pages udiskie fastfetch
+CORE_PACKAGES=(
+    git
+    base-devel
+    archlinux-keyring
+    curl
+    wget
+    unzip
+    bluez
+    bluez-utils
+    firewalld
+    pavucontrol
+    gst-plugin-pipewire
+    pipewire
+    pipewire-alsa
+    pipewire-audio
+    pipewire-jack
+    pipewire-pulse
+    wireplumber
+    networkmanager
+    brightnessctl 
+)
+
+# LAPTOP_PACKAGES=(
+#     fprintd
+#     libinput-gestures
+# )
+
+FONT_PACKAGES=(
+    ttf-hack-nerd
+    ttf-jetbrains-mono-nerd
+    ttf-meslo-nerd
+    ttf-noto-nerd
+    noto-fonts
+    otf-font-awesome
+    noto-fonts-emoji
+)
+
+HYPR_PACKAGES=(
+    kitty
+    hyprland
+    polkit-gnome
+    qt5-wayland
+    qt6-wayland
+    xdg-desktop-portal-hyprland
+    xdg-desktop-portal-gtk
+    xdg-utils
+    # extras
+    network-manager-applet
+    blueman
+    thunar
+    swaync
+    grim
+    slurp
+    wofi
+    rofi-wayland
+    nwg-look
+    nwg-displays
+    waybar
+    swww
+    imagemagick
+    hypridle
+    hyprlock
+    hyprshade
+    qt5ct
+    qt6ct
+    zsh
+    firefox
+    man-db
+    man-pages
+    udiskie
+    fastfetch
 )
 
 AUR_PACKAGES=(
-    wlogout papirus-icon-theme-git bibata-cursor-theme-bin gowall swayosd-git clipse 
-    grimblast-git waypaper waybar-updates
+    wlogout
+    papirus-icon-theme-git
+    bibata-cursor-theme-bin
+    gowall
+    swayosd-git
+    clipse 
+    grimblast-git
+    waypaper
+    waybar-updates
 )
 
 # Function to ask yes or no questions
@@ -101,10 +170,30 @@ symlink_dotfiles() {
     echo "Dotfiles symlinked successfully"
 }
 
-install_nord_gtk_theme() {
-    wget -O $TEMP_DIR/Nordic-darker.tar.xz https://github.com/EliverLara/Nordic/releases/download/v2.2.0/Nordic-darker.tar.xz
-    tar -xvf $TEMP_DIR/Nordic-darker.tar.xz -C $TEMP_DIR
-    sudo mv $TEMP_DIR/Nordic-darker /usr/share/themes/Nordic-darker
+install_gtk_themes() {
+    echo "Installing Nordic GTK Theme..."
+    wget -O $TEMP_DIR/Nordic.tar.xz https://github.com/EliverLara/Nordic/releases/download/v2.2.0/Nordic.tar.xz --quiet
+    tar -xf $TEMP_DIR/Nordic.tar.xz -C $TEMP_DIR
+    sudo mkdir -p $HOME/.themes/Nordic/
+    sudo cp -r $TEMP_DIR/Nordic $HOME/.themes/Nordic/
+    gsettings set org.gnome.desktop.interface gtk-theme "Nordic"
+    gsettings set org.gnome.desktop.wm.preferences theme "Nordic"
+
+    echo "Installing Bibata Modern Ice Cursor..."
+    wget -O $TEMP_DIR/Bibata-Modern-Ice.tar.xz https://github.com/ful1e5/Bibata_Cursor/releases/download/v2.0.7/Bibata-Modern-Ice.tar.xz --quiet
+    tar -xf $TEMP_DIR/Bibata-Modern-Ice.tar.xz -C $TEMP_DIR
+    sudo mkdir -p $HOME/.icons/Bibata-Modern-Ice/
+    sudo cp -r $TEMP_DIR/Bibata-Modern-Ice $HOME/.icons/Bibata-Modern-Ice/
+
+    echo "Installing Papirus Icon Themes..."
+    wget -O $TEMP_DIR/papirus-icon-theme-20250201.tar.gz https://github.com/PapirusDevelopmentTeam/papirus-icon-theme/archive/refs/tags/20250201.tar.gz --quiet
+    tar -xf $TEMP_DIR/papirus-icon-theme-20250201.tar.gz -C $TEMP_DIR
+    sudo cp -r $TEMP_DIR/papirus-icon-theme-20250201/Papirus $HOME/.icons/
+    sudo cp -r $TEMP_DIR/papirus-icon-theme-20250201/Papirus-Light $HOME/.icons/
+    sudo cp -r $TEMP_DIR/papirus-icon-theme-20250201/Papirus-Dark $HOME/.icons/
+
+    echo "Clearing tmp folder..."
+    rm -rf $TEMP_DIR/*
 }
 
 enabling_systemctl_services() {
@@ -159,9 +248,11 @@ main() {
     chmod +x $DOTFILES_DIR/.config/hypr/scripts/*.sh
 
     symlink_dotfiles
+    install_gtk_themes
 
     echo "Adding user to input group..."
     sudo usermod -a -G input "$USER"
+    sudo gpasswd -a $USER input
 
     # Ask about using a laptop
     if ask_yes_no "Are you using a laptop?"; then
