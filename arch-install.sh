@@ -68,7 +68,6 @@ HYPR_PACKAGES=(
     imagemagick
     hypridle
     hyprlock
-    hyprshade
     qt5ct
     qt6ct
     kvantum
