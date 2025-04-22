@@ -70,6 +70,7 @@ button:hover {
 
 #pulseaudio,
 #battery,
+#upower,
 #cpu,
 #memory,
 #disk,
@@ -84,6 +85,7 @@ button:hover {
 #idle_inhibitor,
 #custom-notification,
 #custom-pacman,
+#power-profiles-daemon,
 #custom-wlogout {
     margin-top: 2px;
     margin-bottom: 2px;
@@ -143,6 +145,10 @@ button:hover {
 #battery {
     color: @nord14;
     border-color: @nord14;
+}
+
+#temperature.critical {
+    color: @nord11;
 }
 
 /* If workspaces is the leftmost module, omit left margin */
