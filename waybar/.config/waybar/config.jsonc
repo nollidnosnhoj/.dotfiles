@@ -2,23 +2,24 @@
   "position": "top",
   "modules-left": [
     "custom/wlogout",
-    "hyprland/workspaces",
     "custom/pacman",
+    "idle_inhibitor",
+    "group/hardware",
     "tray",
   ],
   "modules-center": [
-    "clock"
+    "hyprland/workspaces",
   ],
   "modules-right": [
+
     "wireplumber",
     "group/power",
     "backlight",
-    "group/hardware",
-    "idle_inhibitor",
     "custom/notification",
+    "clock"
   ],
   "clock": {
-    "format": "{:%a %d %b %H:%M}",
+    "format": "{:%a %d %b - %H:%M}",
     "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
     "calendar": {
       "mode": "month",
@@ -241,7 +242,7 @@
     "drawer": {
       "transition-duration": 300,
       "children-class": "not-memory",
-      "transition-left-to-right": false
+      "transition-left-to-right": true
     },
     "modules": [
       "temperature",

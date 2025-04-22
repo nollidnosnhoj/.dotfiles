@@ -20,18 +20,13 @@
 
 * {
     font-family: "Noto Sans Nerd Font";
-    font-size: 16px;
+    font-size: 12px;
     min-height: 0;
     font-weight: bold;
 }
 
 window#waybar {
     background: transparent;
-    background-color: @nord0;
-    color: @nord6;
-    transition-property: background-color;
-    transition-duration: 0.1s;
-    border-bottom: 1px solid @nord3;
 }
 
 button {
@@ -45,19 +40,19 @@ button:hover {
 }
 
 #workspaces button {
-    padding: 0 4px;
+    padding: 2px 4px;
     color: @nord8;
 }
 
 #workspaces button.empty {
     color: @nord4;
-    opacity: 0.6;
+    opacity: 0.4;
 }
 
 #workspaces button.active {
-    background-color: rgba(0, 0, 0, 0.3);
-    color: @nord8;
-    border-top: 2px solid @nord8;
+    background-color: @nord8;
+    color: @nord0;
+    border-radius: 50%;
 }
 
 #workspaces button.visible {
@@ -68,6 +63,7 @@ button:hover {
     background-color: @nord11;
 }
 
+#workspaces,
 #pulseaudio,
 #battery,
 #upower,
@@ -86,15 +82,22 @@ button:hover {
 #custom-notification,
 #custom-pacman,
 #power-profiles-daemon,
+#clock,
 #custom-wlogout {
-    margin-top: 2px;
-    margin-bottom: 2px;
-    margin-left: 4px;
-    margin-right: 4px;
-    padding-left: 4px;
-    padding-right: 4px;
+    padding-left: 8px;
+    padding-right: 8px;
     color: @nord7;
-    border-bottom: 2px solid @nord7;
+    background-color: @nord0;
+    transition-property: background-color;
+    transition-duration: 0.1s;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    margin-right: 2px;
+    margin-left: 2px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    border-radius: 5;
+    border: 1px solid @nord3;
 }
 
 #bluetooth.on {
@@ -102,12 +105,10 @@ button:hover {
 }
 
 #tray {
-    border: 0;
 }
 
 #custom-wlogout {
     color: @nord11;
-    border: 0;
 }
 
 @keyframes blink-update {
@@ -125,48 +126,34 @@ button:hover {
     animation-name: blink-update;
     animation-duration: 3s;
     color: @nord13;
-    border-color: @nord13;
 }
 #custom-pacman.updated {
     color: @nord14;
-    border-color: @nord14;
 }
 
 #idle_inhibitor {
     color: @nord14;
-    border-color: @nord14;
 }
 
 #idle_inhibitor.activated {
     color: @nord11;
-    border-color: @nord11;
 }
 
 #battery {
     color: @nord14;
-    border-color: @nord14;
 }
 
 #temperature.critical {
     color: @nord11;
 }
 
-/* If workspaces is the leftmost module, omit left margin */
-.modules-left > widget:first-child > #workspaces {
-    margin-left: 0;
+.modules-left {
+    margin-left: 4px;
 }
 
 .modules-center {
-    margin: 8px;
-    padding-left: 8;
-    padding-right: 8;
-}
-
-/* If workspaces is the rightmost module, omit right margin */
-.modules-right > widget:last-child > #workspaces {
-    margin-right: 0;
 }
 
 .modules-right {
-    margin-right: 2px;
+    margin-right: 4px;
 }
