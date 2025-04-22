@@ -3,6 +3,7 @@
   "modules-left": [
     "custom/wlogout",
     "hyprland/workspaces",
+    "custom/pacman",
     "tray",
   ],
   "modules-center": [
@@ -10,12 +11,10 @@
   ],
   "modules-right": [
     "wireplumber",
-    "upower",
-    "power-profiles-daemon",
+    "group/power",
     "backlight",
     "group/hardware",
     "idle_inhibitor",
-    "custom/pacman",
     "custom/notification",
   ],
   "clock": {
@@ -58,13 +57,13 @@
       "warning": 30,
       "critical": 15,
     },
-    "format": "<span size='13000'>{icon} </span> {capacity}%",
-    "format-warning": "<span size='13000' foreground='#ebcb8b'>{icon} </span> {capacity}%",
-    "format-critical": "<span size='13000' foreground='#bf616a'>{icon} </span> {capacity}%",
-    "format-charging": "<span size='13000' foreground='#d08770'> </span>{capacity}%",
-    "format-plugged": "<span size='13000'> </span>{capacity}%",
-    "format-alt": "<span size='13000'>{icon} </span> {time}",
-    "format-full": "<span size='13000' foreground='#a3be8c'> </span>{capacity}%",
+    "format": "{icon} {capacity}%",
+    "format-warning": "{icon} {capacity}%",
+    "format-critical": "{icon} {capacity}%",
+    "format-charging": " {capacity}%",
+    "format-plugged": " {capacity}%",
+    "format-alt": "{icon}  {time}",
+    "format-full": " {capacity}%",
     "format-icons": [
       "",
       "",
@@ -73,6 +72,18 @@
       ""
     ],
     "tooltip-format": "{time}",
+  },
+  "group/power": {
+    "orientation": "inherit",
+    "drawer": {
+      "transition-duration": 300,
+      "children-class": "not-memory",
+      "transition-left-to-right": false
+    },
+    "modules": [
+      "battery",
+      "power-profiles-daemon"
+    ]
   },
   "upower": {
     "icon-size": 20,
@@ -232,17 +243,20 @@
       "children-class": "not-memory",
       "transition-left-to-right": false
     },
-    "modules": ["temperature", "disk", "cpu", "memory"]
+    "modules": [
+      "temperature",
+      "disk",
+      "cpu",
+      "memory"
+    ]
   },
   "cpu": {
     "format": " {usage}% "
   },
-
   // Memory
   "memory": {
     "format": " {}% "
   },
-
   // Harddisc space used
   "disk": {
     "interval": 30,
