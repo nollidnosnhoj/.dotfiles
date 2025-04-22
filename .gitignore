@@ -1,3 +1,6 @@
 .tmp/
 stow_output.log
 node_modules/
+
+# Waypaper will update the config for each time a wallpaper changes.
+waypaper/.config/waypaper/config.ini
