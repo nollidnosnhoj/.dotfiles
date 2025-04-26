@@ -20,13 +20,18 @@
 
 * {
     font-family: "Noto Sans Nerd Font";
-    font-size: 12px;
+    font-size: 14px;
     min-height: 0;
     font-weight: bold;
 }
 
 window#waybar {
     background: transparent;
+    background-color: @nord0;
+    color: @nord6;
+    transition-property: background-color;
+    transition-duration: 0.1s;
+    border-bottom: 1px solid @nord3;
 }
 
 button {
@@ -40,19 +45,19 @@ button:hover {
 }
 
 #workspaces button {
-    padding: 2px 4px;
+    padding: 0 4px;
     color: @nord8;
 }
 
 #workspaces button.empty {
     color: @nord4;
-    opacity: 0.4;
+    opacity: 0.6;
 }
 
 #workspaces button.active {
-    background-color: @nord8;
-    color: @nord0;
-    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.3);
+    color: @nord8;
+    border-top: 2px solid @nord8;
 }
 
 #workspaces button.visible {
@@ -63,15 +68,27 @@ button:hover {
     background-color: @nord11;
 }
 
-#workspaces,
-#pulseaudio,
+#wireplumber,
+#power,
+#hardware,
+#misc ,
+#tray {
+    background-color: @nord1;
+    transition-property: background-color;
+    transition-duration: 0.1s;
+    border-radius: 5;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    padding-left: 4px;
+    padding-right: 4px;
+    margin-right: 2px;
+    margin-left: 2px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+
 #battery,
-#upower,
-#cpu,
-#memory,
-#disk,
-#temperature,
-#backlight,
+#pulseaudio,
 #wireplumber,
 #tray,
 #network,
@@ -79,32 +96,18 @@ button:hover {
 #mode,
 #scratchpad,
 #idle_inhibitor,
+#power-profiles-daemon,
 #custom-notification,
 #custom-pacman,
-#power-profiles-daemon,
-#clock,
-#custom-wlogout {
-    padding-left: 8px;
-    padding-right: 8px;
+#custom-wlogout,
+#cpu, #memory, #disk, #temperature  {
+    padding-left: 6px;
+    padding-right: 6px;
     color: @nord7;
-    background-color: @nord0;
-    transition-property: background-color;
-    transition-duration: 0.1s;
-    padding-top: 4px;
-    padding-bottom: 4px;
-    margin-right: 2px;
-    margin-left: 2px;
-    margin-top: 4px;
-    margin-bottom: 4px;
-    border-radius: 5;
-    border: 1px solid @nord3;
 }
 
 #bluetooth.on {
     opacity: 0.7;
-}
-
-#tray {
 }
 
 #custom-wlogout {
@@ -147,13 +150,23 @@ button:hover {
     color: @nord11;
 }
 
-.modules-left {
-    margin-left: 4px;
+
+/* If workspaces is the leftmost module, omit left margin */
+.modules-left > widget:first-child > #workspaces {
+    margin-left: 0;
 }
 
 .modules-center {
+    margin: 4px;
+    padding-left: 8;
+    padding-right: 8;
+}
+
+/* If workspaces is the rightmost module, omit right margin */
+.modules-right > widget:last-child > #workspaces {
+    margin-right: 0;
 }
 
 .modules-right {
-    margin-right: 4px;
+    margin-right: 2px;
 }

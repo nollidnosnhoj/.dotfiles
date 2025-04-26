@@ -1,22 +1,18 @@
 {
   "position": "top",
   "modules-left": [
-    "custom/wlogout",
-    "custom/pacman",
-    "idle_inhibitor",
-    "group/hardware",
-    "tray",
-  ],
-  "modules-center": [
     "hyprland/workspaces",
   ],
-  "modules-right": [
+  "modules-center": [
 
+    "clock"
+  ],
+  "modules-right": [
     "wireplumber",
     "group/power",
-    "backlight",
-    "custom/notification",
-    "clock"
+    "group/hardware",
+    "group/misc",
+    "tray"
   ],
   "clock": {
     "format": "{:%a %d %b - %H:%M}",
@@ -76,14 +72,11 @@
   },
   "group/power": {
     "orientation": "inherit",
-    "drawer": {
-      "transition-duration": 300,
-      "children-class": "not-memory",
-      "transition-left-to-right": false
-    },
     "modules": [
-      "battery",
-      "power-profiles-daemon"
+      "idle_inhibitor",
+      "power-profiles-daemon",
+
+      "battery"
     ]
   },
   "upower": {
@@ -241,8 +234,7 @@
     "orientation": "inherit",
     "drawer": {
       "transition-duration": 300,
-      "children-class": "not-memory",
-      "transition-left-to-right": true
+      "transition-left-to-right": false
     },
     "modules": [
       "temperature",
@@ -264,4 +256,12 @@
     "format": "󱛟 {percentage_used}% ",
     "path": "/"
   },
+
+  "group/misc": {
+    "orientation": "inherit",
+    "modules": [
+      "custom/pacman",
+      "custom/notification"
+    ]
+  }
 }
