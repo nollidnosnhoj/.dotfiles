@@ -20,7 +20,7 @@
 
 * {
     font-family: "Noto Sans Nerd Font";
-    font-size: 14px;
+    font-size: 16px;
     min-height: 0;
     font-weight: bold;
 }
@@ -109,30 +109,22 @@ button:hover {
     color: @nord7;
 }
 
-#bluetooth.on {
+#bluetooth {
     opacity: 0.7;
+}
+
+#bluetooth.connected {
+    opacity: 1;
 }
 
 #custom-wlogout {
     color: @nord11;
 }
 
-@keyframes blink-update {
-    to {
-        background-color: dodgerblue;
-    }
-}
-
-#custom-pacman {
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
-    animation-direction: alternate;
-}
 #custom-pacman.pending-updates {
-    animation-name: blink-update;
-    animation-duration: 3s;
     color: @nord13;
 }
+
 #custom-pacman.updated {
     color: @nord14;
 }

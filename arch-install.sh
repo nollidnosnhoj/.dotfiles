@@ -71,6 +71,13 @@ PACKAGES=(
     man-pages
     udiskie
     fastfetch
+
+    # thunar extensions
+    thunar-volman 
+    tumbler
+    ffmpegthumbnailer 
+    thunar-archive-plugin
+    xarchiver
 )
 
 AUR_PACKAGES=(
@@ -90,6 +97,9 @@ DEV_PACKAGES=(
     neovim-git
     zoxide
     eza
+    fzf
+    github-cli
+    lazygit
 )
 
 REMOVED_PACKAGES=(
@@ -227,9 +237,6 @@ main() {
     fi
 
     echo "Installing my arch linux dotfiles..."
-
-    echo "Installing git..."
-    sudo pacman -S --needed git
 
     echo "Enhancing git..."
     git config --global http.postBuffer 157286400
