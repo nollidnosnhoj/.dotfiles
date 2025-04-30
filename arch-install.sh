@@ -6,8 +6,7 @@ TEMP_DIR=$DOTFILES_DIR/.tmp
 
 STOW_PATHS="fastfetch,gowall,gtk,hypr,kitty,qt,rofi,waybar,waypaper,wlogout,wofi,zsh"
 
-CORE_PACKAGES=(
-    git
+PACKAGES=(
     base-devel
     archlinux-keyring
     curl
@@ -39,7 +38,7 @@ CORE_PACKAGES=(
     # hyprland
     kitty
     hyprland
-    polkit-gnome
+    polkit-kde-agent
     qt5-wayland
     qt6-wayland
     xdg-desktop-portal-hyprland
@@ -91,6 +90,12 @@ DEV_PACKAGES=(
     neovim-git
     zoxide
     eza
+)
+
+REMOVED_PACKAGES=(
+    dunst
+    dolphin
+    wofi
 )
 
 # Function to ask yes or no questions
@@ -197,6 +202,17 @@ enabling_systemctl_services() {
     sudo systemctl enable --now swayosd-libinput-backend.service
 }
 
+enabling_greetd() {
+    echo "Installing greetd login manager"
+    sudo pacman -S --needed greetd greetd-tuigreet
+
+    echo "Copying configuration to /etc/greetd/config.toml"
+    sudo cp -rf $DOTFILES_DIR/greetd/config.toml /etc/greetd/config.toml
+
+    echo "Enabling greetd service"
+    sudo systemctl enable greetd.service
+}
+
 main() {
     # checks if the current working directory is the correct dotfiles path...
     if [ $(pwd) != $DOTFILES_DIR ]; then
@@ -211,6 +227,9 @@ main() {
     fi
 
     echo "Installing my arch linux dotfiles..."
+
+    echo "Installing git..."
+    sudo pacman -S --needed git
 
     echo "Enhancing git..."
     git config --global http.postBuffer 157286400
@@ -230,6 +249,9 @@ main() {
 
     echo "Installing required packages from AUR using yay..."
     yay -S --needed "${AUR_PACKAGES[@]}"
+
+    echo "Removing packages from archinstall"
+    sudo pacman -Rs "${REMOVED_PACKAGES[@]}"
 
     echo "Modifying scripts' permissions for execution"
     chmod +x $DOTFILES_DIR/.config/hypr/scripts/*.sh
@@ -251,13 +273,14 @@ main() {
     git clone https://github.com/nollidnosnhoj/kickstart.nvim $HOME/.config/nvim
     echo "Run 'nvim' to install neovim plugins."
 
-    echo "Switching to z-shell..."
+    echo "Switching to zsh..."
     chsh -s /bin/zsh
 
     echo "Cleaning temp directory"
     rm -rf $TEMP_DIR
 
     enabling_systemctl_services
+    enabling_greetd
 
     # Ask about using a laptop
     if ask_yes_no "Are you using a laptop?"; then
@@ -269,6 +292,8 @@ main() {
 
         echo "Autostarting Libinput Gestures"
         libinput-gestures-setup autostart
+
+        echo "Note: Greetd does not support fingerprint authentication. You may want to use a different login manager, like SDDM"
     else
         echo "Laptop installation skipped installation skipped."
     fi
