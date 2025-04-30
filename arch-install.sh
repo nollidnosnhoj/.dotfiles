@@ -202,12 +202,6 @@ enabling_systemctl_services() {
     sudo systemctl enable --now swayosd-libinput-backend.service
 }
 
-enable_sddm() {
-    echo "Installing SDDM"
-    sudo pacman -S --needed sddm qt5-graphicaleffects qt5-quickcontrols2 qt5-svg
-    sudo systemctl enable sddm.service
-}
-
 main() {
     # checks if the current working directory is the correct dotfiles path...
     if [ $(pwd) != $DOTFILES_DIR ]; then
@@ -269,7 +263,6 @@ main() {
     rm -rf $TEMP_DIR
 
     enabling_systemctl_services
-    enable_sddm
 
     # Ask about using a laptop
     if ask_yes_no "Are you using a laptop?"; then
