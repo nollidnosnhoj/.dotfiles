@@ -4,7 +4,7 @@ XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 DOTFILES_DIR=$HOME/.dotfiles
 TEMP_DIR=$DOTFILES_DIR/.tmp
 
-STOW_PATHS="fastfetch,gowall,gtk,hypr,kitty,qt,rofi,waybar,waypaper,wlogout,wofi,zsh"
+STOW_PATHS="fastfetch,gowall,gtk,hypr,kitty,oh-my-posh,qt,rofi,waybar,waypaper,wlogout,zsh"
 
 PACKAGES=(
     base-devel
@@ -259,8 +259,8 @@ main() {
     symlink_dotfiles
     install_gtk_themes
 
-    mkdir $HOME/wallpapers
-    cp -r $DOTFILES_DIR/wallpapers/* $HOME/wallpapers
+    mkdir -p $HOME/Pictures/Wallpapers
+    cp -r $DOTFILES_DIR/wallpapers/* $HOME/Pictures/Wallpapers
 
     echo "Adding user to input group..."
     sudo usermod -a -G input "$USER"
