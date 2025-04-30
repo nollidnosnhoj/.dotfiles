@@ -2,17 +2,18 @@
   "position": "top",
   "modules-left": [
     "hyprland/workspaces",
+    "tray"
   ],
   "modules-center": [
-
     "clock"
   ],
   "modules-right": [
     "wireplumber",
+    "network",
+    "bluetooth",
     "group/power",
     "group/hardware",
     "group/misc",
-    "tray"
   ],
   "clock": {
     "format": "{:%a %d %b - %H:%M}",

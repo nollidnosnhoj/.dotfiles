@@ -26,14 +26,8 @@ CORE_PACKAGES=(
     wireplumber
     networkmanager
     brightnessctl 
-)
 
-# LAPTOP_PACKAGES=(
-#     fprintd
-#     libinput-gestures
-# )
-
-FONT_PACKAGES=(
+    # fonts
     ttf-hack-nerd
     ttf-jetbrains-mono-nerd
     ttf-meslo-nerd
@@ -41,9 +35,8 @@ FONT_PACKAGES=(
     noto-fonts
     otf-font-awesome
     noto-fonts-emoji
-)
 
-HYPR_PACKAGES=(
+    # hyprland
     kitty
     hyprland
     polkit-gnome
@@ -51,8 +44,10 @@ HYPR_PACKAGES=(
     qt6-wayland
     xdg-desktop-portal-hyprland
     xdg-desktop-portal-gtk
+    xdg-desktop-portal
     xdg-utils
-    # extras
+    
+    # hyprland extras
     network-manager-applet
     blueman
     thunar

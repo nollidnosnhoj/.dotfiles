@@ -71,8 +71,10 @@ button:hover {
 #wireplumber,
 #power,
 #hardware,
-#misc ,
-#tray {
+#misc,
+#network,
+#bluetooth {
+    color: @nord7;
     background-color: @nord1;
     transition-property: background-color;
     transition-duration: 0.1s;
@@ -91,8 +93,6 @@ button:hover {
 #pulseaudio,
 #wireplumber,
 #tray,
-#network,
-#bluetooth,
 #mode,
 #scratchpad,
 #idle_inhibitor,
@@ -100,7 +100,10 @@ button:hover {
 #custom-notification,
 #custom-pacman,
 #custom-wlogout,
-#cpu, #memory, #disk, #temperature  {
+#cpu, 
+#memory, 
+#disk, 
+#temperature  {
     padding-left: 6px;
     padding-right: 6px;
     color: @nord7;
