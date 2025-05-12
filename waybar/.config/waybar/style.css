@@ -69,15 +69,12 @@ button:hover {
 }
 
 #wireplumber,
+#idle_inhibitor,
 #power,
 #hardware,
 #misc,
 #net {
     color: @nord7;
-    background-color: @nord1;
-    transition-property: background-color;
-    transition-duration: 0.1s;
-    border-radius: 5;
     padding-top: 4px;
     padding-bottom: 4px;
     padding-left: 4px;
@@ -96,7 +93,6 @@ button:hover {
 #tray,
 #mode,
 #scratchpad,
-#idle_inhibitor,
 #power-profiles-daemon,
 #custom-notification,
 #custom-pacman,

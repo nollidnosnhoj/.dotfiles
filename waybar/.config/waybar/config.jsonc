@@ -10,8 +10,10 @@
   "modules-right": [
     "wireplumber",
     "group/net",
-    "group/power",
     "group/hardware",
+    "battery",
+    "power-profiles-daemon",
+    "idle_inhibitor",
     "group/misc",
   ],
   "clock": {
@@ -70,18 +72,6 @@
     ],
     "tooltip-format": "{time}",
   },
-  "group/power": {
-    "orientation": "inherit",
-    "drawer": {
-      "transition-duration": 300,
-      "transition-left-to-right": false
-    },
-    "modules": [
-      "battery",
-      "idle_inhibitor",
-      "power-profiles-daemon",
-    ]
-  },
   "upower": {
     "icon-size": 20,
     "hide-if-empty": true,
@@ -108,7 +98,7 @@
   },
   "bluetooth": {
     "on-click": "blueman-manager",
-    "format": "",
+    "format": "󰂯",
     "format-disabled": "󰂲",
     "format-connected": "",
     "format-connected-battery": " {device_battery_percentage}%",
