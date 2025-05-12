@@ -1,5 +1,5 @@
-default_dir="$HOME/wallpapers/.defaults"
-wallpaper_cache_dir="$HOME/wallpapers/.cache"
+default_dir="$HOME/Pictures/Wallpapers/.defaults"
+wallpaper_cache_dir="$HOME/Pictures/Wallpapers/.defaults"
 blurred_wallpaper="$default_dir/blurred-wallpaper.png"
 squarred_wallpaper="$default_dir/squared-wallpaper.png"
 blur="50x30"
