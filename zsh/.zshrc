@@ -1,5 +1,7 @@
 export GPG_TTY=$(tty)
 
+export PATH=$PATH:~/.dotnet/tools
+
 # initialize zinit framework
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 [ ! -d $ZINIT_HOME ] && mkdir -p "$(dirname $ZINIT_HOME)"

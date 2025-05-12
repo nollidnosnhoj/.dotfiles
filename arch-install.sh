@@ -3,11 +3,11 @@
 XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 DOTFILES_DIR=$HOME/.dotfiles
 TEMP_DIR=$DOTFILES_DIR/.tmp
+LOG_FILE="arch_install_$(date '+%Y-%m-%d %H:%M:%S').log"
 
 STOW_PATHS="fastfetch,git,gowall,gtk,hypr,kitty,mise,oh-my-posh,qt,rofi,swaync,waybar,waypaper,wlogout,zsh"
 
-PACKAGES=(
-    base-devel
+CORE_PACKAGES=(
     archlinux-keyring
     curl
     wget
@@ -24,9 +24,11 @@ PACKAGES=(
     pipewire-pulse
     wireplumber
     networkmanager
-    brightnessctl 
+    brightnessctl
+    playerctl
+)
 
-    # fonts
+FONT_PACKAGES=(
     ttf-hack-nerd
     ttf-jetbrains-mono-nerd
     ttf-meslo-nerd
@@ -34,18 +36,21 @@ PACKAGES=(
     noto-fonts
     otf-font-awesome
     noto-fonts-emoji
+)
 
-    # hyprland
+HYPR_PACKAGES=(
     kitty
     hyprland
-    polkit-kde-agent
+    hyprpolkitagent
     qt5-wayland
     qt6-wayland
     xdg-desktop-portal-hyprland
     xdg-desktop-portal-gtk
     xdg-desktop-portal
     xdg-utils
-    
+)
+
+HYPR_EXTRA_PACKAGES=(
     # hyprland extras
     network-manager-applet
     blueman
@@ -168,7 +173,7 @@ enable_chaotic_aur() {
 }
 
 # Symlink dotfiles using GNU Stow
-symlink_dotfiles() {
+stow_dotfiles() {
     echo "Installing stow..."
     sudo pacman -S --needed --noconfirm stow
 
@@ -191,18 +196,23 @@ symlink_dotfiles() {
     echo "Dotfiles symlinked successfully"
 }
 
-install_gtk_themes() {
+install_gtk_icons_and_themes() {
+    echo "Installing GTK icons..."
     yay -S --needed --noconfirm papirus-icon-theme-git bibata-cursor-theme-bin 
 
-    wget -O $TEMP_DIR/Nordic.tar.xz https://github.com/EliverLara/Nordic/releases/download/v2.2.0/Nordic.tar.xz
-    tar -xvf $TEMP_DIR/Nordic.tar.xz -C $TEMP_DIR
-    sudo mv $TEMP_DIR/Nordic /usr/share/themes/Nordic
-
-    gsettings set org.gnome.desktop.interface gtk-theme "Nordic"
-    gsettings set org.gnome.desktop.wm.preferences theme "Nordic"
+    if [ -d /usr/share/themes/Nordic ]; then
+        echo "GTK theme already installed..."
+    else
+        echo "Installing GTK theme..."
+        wget -O $TEMP_DIR/Nordic.tar.xz https://github.com/EliverLara/Nordic/releases/download/v2.2.0/Nordic.tar.xz
+        tar -xvf $TEMP_DIR/Nordic.tar.xz -C $TEMP_DIR
+        sudo mv $TEMP_DIR/Nordic /usr/share/themes/Nordic
+        gsettings set org.gnome.desktop.interface gtk-theme "Nordic"
+        gsettings set org.gnome.desktop.wm.preferences theme "Nordic"
+    fi
 }
 
-enabling_systemctl_services() {
+enabling_services() {
     echo "Enabling network manager service..."
     sudo systemctl enable --now NetworkManager.service
 
@@ -216,13 +226,12 @@ enabling_systemctl_services() {
     sudo systemctl enable --now swayosd-libinput-backend.service
 }
 
-main() {
+install() {
     # checks if the current working directory is the correct dotfiles path...
     if [ $(pwd) != $DOTFILES_DIR ]; then
         echo "The current directory must be in $DOTFILES_DIR"
         exit 1
     fi
-    hyprshade
 
     # create temp directory if not exist
     if [ ! -d $TEMP_DIR ]; then
@@ -231,6 +240,11 @@ main() {
     fi
 
     echo "Installing my arch linux dotfiles..."
+
+    if ! command -v git &> /dev/null; then
+        echo "Git was not installed... Installing git..."
+        sudo pacman -S --needed --noconfirm git base-devel
+    fi
 
     echo "Enhancing git..."
     git config --global http.postBuffer 157286400
@@ -242,14 +256,30 @@ main() {
     install_yay
     enable_chaotic_aur
 
+    if ask_yes_no "Add cachy_os repositories? [NOTE] This would modify pacman."; then
+        source ./.scripts/cachyos_repos.sh
+    fi
+
     echo "Reducing package compression time..."
     sudo sed -i 's/COMPRESSZST=(zstd -c -T0 --ultra -20 -)/COMPRESSZST=(zstd -c -T0 --fast -)/' /etc/makepkg.conf
 
-    echo "Installing required packages using pacman..."
-    sudo pacman -S --needed --noconfirm "${PACKAGES[@]}"
+    echo "Installing core packages using pacman..."
+    sudo pacman -S --needed --noconfirm "${CORE_PACKAGES[@]}"
 
-    echo "Installing required packages from AUR using yay..."
+    echo "Installing hyprland packages..."
+    sudo pacman -S --needed --noconfirm "${HYPR_PACKAGES[@]}"
+
+    echo "Installing additional hyprland packages..."
+    sudo pacman -S --needed --noconfirm "${HYPR_EXTRA_PACKAGES[@]}"
+
+    echo "Installing font packages..."
+    sudo pacman -S --needed --noconfirm "${FONT_PACKAGES[@]}"
+
+    echo "Installing AUR packages..."
     yay -S --needed --noconfirm "${AUR_PACKAGES[@]}"
+
+    echo "Installing development packages..."
+    yay -S --needed --noconfirm "${DEV_PACKAGES[@]}"
 
     echo "Removing packages from archinstall"
     sudo pacman -Rs "${REMOVED_PACKAGES[@]}"
@@ -257,9 +287,10 @@ main() {
     echo "Modifying scripts' permissions for execution"
     chmod +x $DOTFILES_DIR/.config/hypr/scripts/*.sh
 
-    symlink_dotfiles
-    install_gtk_themes
+    stow_dotfiles
+    install_gtk_icons_and_themes
 
+    echo "Setting up wallpapers directory..."
     mkdir -p $HOME/Pictures/Wallpapers
     cp -r $DOTFILES_DIR/wallpapers/. $HOME/Pictures/Wallpapers
 
@@ -267,8 +298,8 @@ main() {
     sudo usermod -a -G input "$USER"
     sudo gpasswd -a $USER input
 
-    echo "Installing dev-related packages from AUR using yay..."
-    yay -S --needed --noconfirm "${DEV_PACKAGES[@]}"
+    echo "Installing tools using mise..."
+    mise install
 
     echo "Installing neovim configuration..."
     git clone https://github.com/nollidnosnhoj/kickstart.nvim $HOME/.config/nvim
@@ -280,10 +311,7 @@ main() {
     echo "Installing extra packages..."
     sudo pacman -S --needed "${DEV_PACKAGES[@]}"
 
-    echo "Cleaning temp directory"
-    rm -rf $TEMP_DIR
-
-    enabling_systemctl_services
+    enabling_services
 
     is_install_greetd=$(ask_yes_no "Install greetd login manager?")
 
@@ -321,6 +349,9 @@ main() {
         sleep 1
     fi
 
+    echo "Cleaning temp directory"
+    rm -rf $TEMP_DIR
+
     # Ask about restart
     if ask_yes_no "Dotfiles successfully installed. Do you want to restart now?"; then
         sudo reboot now
@@ -329,4 +360,7 @@ main() {
     fi
 }
 
-main
+if [ ! -f ./arch_install.log ]; then
+    touch ./arch_install.log
+fi
+install | tee arch_install.log
