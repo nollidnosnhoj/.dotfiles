@@ -4,7 +4,7 @@ XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 DOTFILES_DIR=$HOME/.dotfiles
 TEMP_DIR=$DOTFILES_DIR/.tmp
 
-STOW_PATHS="fastfetch,gowall,gtk,hypr,kitty,oh-my-posh,qt,rofi,waybar,ironbar,waypaper,wlogout,zsh"
+STOW_PATHS="fastfetch,git,gowall,gtk,hypr,kitty,mise,oh-my-posh,qt,rofi,swaync,waybar,waypaper,wlogout,zsh"
 
 PACKAGES=(
     base-devel
@@ -58,7 +58,6 @@ PACKAGES=(
     nwg-look
     nwg-displays
     waybar
-    ironbar
     hyprpaper
     imagemagick
     hypridle
