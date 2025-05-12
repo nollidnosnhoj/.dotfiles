@@ -91,6 +91,7 @@ AUR_PACKAGES=(
     swayosd-git
     clipse 
     grimblast-git
+    walker-bin
     waypaper
     waybar-updates
 )
