@@ -4,7 +4,7 @@ XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 DOTFILES_DIR=$HOME/.dotfiles
 TEMP_DIR=$DOTFILES_DIR/.tmp
 
-STOW_PATHS="fastfetch,gowall,gtk,hypr,kitty,oh-my-posh,qt,rofi,waybar,waypaper,wlogout,zsh"
+STOW_PATHS="fastfetch,gowall,gtk,hypr,kitty,oh-my-posh,qt,rofi,waybar,ironbar,waypaper,wlogout,zsh"
 
 PACKAGES=(
     base-devel
@@ -58,6 +58,7 @@ PACKAGES=(
     nwg-look
     nwg-displays
     waybar
+    ironbar
     hyprpaper
     imagemagick
     hypridle
@@ -100,6 +101,10 @@ DEV_PACKAGES=(
     fzf
     github-cli
     lazygit
+)
+
+EXTRA_PACKAGES=(
+    mullvad-vpn
 )
 
 REMOVED_PACKAGES=(
@@ -229,6 +234,7 @@ main() {
         echo "The current directory must be in $DOTFILES_DIR"
         exit 1
     fi
+    hyprshade
 
     # create temp directory if not exist
     if [ ! -d $TEMP_DIR ]; then
@@ -252,10 +258,10 @@ main() {
     sudo sed -i 's/COMPRESSZST=(zstd -c -T0 --ultra -20 -)/COMPRESSZST=(zstd -c -T0 --fast -)/' /etc/makepkg.conf
 
     echo "Installing required packages using pacman..."
-    sudo pacman -S --needed "${PACKAGES[@]}"
+    sudo pacman -S --needed --noconfirm "${PACKAGES[@]}"
 
     echo "Installing required packages from AUR using yay..."
-    yay -S --needed "${AUR_PACKAGES[@]}"
+    yay -S --needed --noconfirm "${AUR_PACKAGES[@]}"
 
     echo "Removing packages from archinstall"
     sudo pacman -Rs "${REMOVED_PACKAGES[@]}"
@@ -274,7 +280,7 @@ main() {
     sudo gpasswd -a $USER input
 
     echo "Installing dev-related packages from AUR using yay..."
-    yay -S --needed "${DEV_PACKAGES[@]}"
+    yay -S --needed --noconfirm "${DEV_PACKAGES[@]}"
 
     echo "Installing neovim configuration..."
     git clone https://github.com/nollidnosnhoj/kickstart.nvim $HOME/.config/nvim
@@ -282,6 +288,9 @@ main() {
 
     echo "Switching to zsh..."
     chsh -s /bin/zsh
+
+    echo "Installing extra packages..."
+    sudo pacman -S --needed "${DEV_PACKAGES[@]}"
 
     echo "Cleaning temp directory"
     rm -rf $TEMP_DIR

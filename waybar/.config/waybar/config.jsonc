@@ -9,8 +9,7 @@
   ],
   "modules-right": [
     "wireplumber",
-    "network",
-    "bluetooth",
+    "group/net",
     "group/power",
     "group/hardware",
     "group/misc",
@@ -73,11 +72,14 @@
   },
   "group/power": {
     "orientation": "inherit",
+    "drawer": {
+      "transition-duration": 300,
+      "transition-left-to-right": false
+    },
     "modules": [
+      "battery",
       "idle_inhibitor",
       "power-profiles-daemon",
-
-      "battery"
     ]
   },
   "upower": {
@@ -96,6 +98,13 @@
       "balanced": "",
       "power-saver": ""
     }
+  },
+  "group/net": {
+    "orientation": "inherit",
+    "modules": [
+      "network",
+      "bluetooth"
+    ]
   },
   "bluetooth": {
     "on-click": "blueman-manager",

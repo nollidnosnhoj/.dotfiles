@@ -72,8 +72,7 @@ button:hover {
 #power,
 #hardware,
 #misc,
-#network,
-#bluetooth {
+#net {
     color: @nord7;
     background-color: @nord1;
     transition-property: background-color;
@@ -92,6 +91,8 @@ button:hover {
 #battery,
 #pulseaudio,
 #wireplumber,
+#network,
+#bluetooth,
 #tray,
 #mode,
 #scratchpad,
