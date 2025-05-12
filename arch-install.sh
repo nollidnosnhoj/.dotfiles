@@ -143,7 +143,7 @@ EOT
 install_yay() {
     if ! command -v yay &> /dev/null; then
         echo "Installing yay..."
-        sudo pacman -S --needed git base-devel
+        sudo pacman -S --needed --noconfirm git base-devel
         git clone https://aur.archlinux.org/yay.git
         cd yay
         makepkg -si
@@ -171,7 +171,7 @@ enable_chaotic_aur() {
 # Symlink dotfiles using GNU Stow
 symlink_dotfiles() {
     echo "Installing stow..."
-    sudo pacman -S --needed stow
+    sudo pacman -S --needed --noconfirm stow
 
     local log_file=$DOTFILES_DIR/stow_arch_output.log
 
@@ -193,7 +193,7 @@ symlink_dotfiles() {
 }
 
 install_gtk_themes() {
-    yay -S --needed papirus-icon-theme-git bibata-cursor-theme-bin 
+    yay -S --needed --noconfirm papirus-icon-theme-git bibata-cursor-theme-bin 
 
     wget -O $TEMP_DIR/Nordic.tar.xz https://github.com/EliverLara/Nordic/releases/download/v2.2.0/Nordic.tar.xz
     tar -xvf $TEMP_DIR/Nordic.tar.xz -C $TEMP_DIR
@@ -215,17 +215,6 @@ enabling_systemctl_services() {
 
     echo "Enabling SwayOSD Libinput Backend service..."
     sudo systemctl enable --now swayosd-libinput-backend.service
-}
-
-enabling_greetd() {
-    echo "Installing greetd login manager"
-    sudo pacman -S --needed greetd greetd-tuigreet
-
-    echo "Copying configuration to /etc/greetd/config.toml"
-    sudo cp -rf $DOTFILES_DIR/greetd/config.toml /etc/greetd/config.toml
-
-    echo "Enabling greetd service"
-    sudo systemctl enable greetd.service
 }
 
 main() {
@@ -296,11 +285,26 @@ main() {
     rm -rf $TEMP_DIR
 
     enabling_systemctl_services
-    enabling_greetd
+
+    is_install_greetd=$(ask_yes_no "Install greetd login manager?")
+
+    if $is_install_greetd; then
+        echo "Installing greetd login manager"
+        sudo pacman -S --needed --noconfirm greetd greetd-tuigreet
+
+        echo "Copying configuration to /etc/greetd/config.toml"
+        sudo cp -rf $DOTFILES_DIR/greetd/config.toml /etc/greetd/config.toml
+
+        echo "Enabling greetd service"
+        sudo systemctl enable greetd.service
+    else
+        echo "No login manager installed... You will need to install a login manager manually."
+        sleep 4
+    fi
 
     # Ask about using a laptop
     if ask_yes_no "Are you using a laptop?"; then
-        yay -S --needed batsignal fprintd pam-fprint-grosshack libinput-gestures
+        yay -S --needed --noconfirm batsignal fprintd pam-fprint-grosshack libinput-gestures
         systemctl --user enable batsignal.service
         systemctl --user start batsignal.service
         mkdir -p $XDG_CONFIG_HOME/systemd/user/batsignal.service.d
@@ -309,9 +313,13 @@ main() {
         echo "Autostarting Libinput Gestures"
         libinput-gestures-setup autostart
 
-        echo "Note: Greetd does not support fingerprint authentication. You may want to use a different login manager, like SDDM"
+        if $is_install_greetd; then
+            echo "Note: Greetd does not support fingerprint authentication. You may want to use a different login manager, like SDDM"
+            sleep 4
+        fi
     else
         echo "Laptop installation skipped installation skipped."
+        sleep 1
     fi
 
     # Ask about restart
