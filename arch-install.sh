@@ -5,7 +5,7 @@ DOTFILES_DIR=$HOME/.dotfiles
 TEMP_DIR=$DOTFILES_DIR/.tmp
 LOG_FILE="arch_install_$(date '+%Y-%m-%d %H:%M:%S').log"
 
-STOW_PATHS="fastfetch,git,gowall,gtk,hypr,kitty,mise,oh-my-posh,qt,rofi,swaync,waybar,waypaper,wlogout,zsh"
+STOW_PATHS="fastfetch,git,gowall,gtk,hypr,kitty,mise,oh-my-posh,qt,rofi,swaync,walker,waybar,waypaper,wlogout,zsh"
 
 CORE_PACKAGES=(
     archlinux-keyring
@@ -94,6 +94,7 @@ AUR_PACKAGES=(
     walker-bin
     waypaper
     waybar-updates
+    vscodium-bin
 )
 
 DEV_PACKAGES=(
@@ -181,6 +182,8 @@ stow_dotfiles() {
     local log_file=$DOTFILES_DIR/stow_arch_output.log
 
     echo "Symlinking dotfiles from $DOTFILES_DIR to $HOME..."
+
+    rm ~/.gitconfig
 
     for folder in $(echo $STOW_PATHS | sed "s/,/ /g"); do
         echo "stow $folder"

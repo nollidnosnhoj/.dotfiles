@@ -7,7 +7,6 @@ if [ $(pwd) != $DOTFILES_DIR ]; then
     echo "The current directory must be in $DOTFILES_DIR"
     exit 1
 fi
-hyprshade
 
 # create temp directory if not exist
 if [ ! -d $TEMP_DIR ]; then
