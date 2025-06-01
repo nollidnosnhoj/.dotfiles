@@ -33,7 +33,9 @@ echo "Installing neovim configuration..."
 git clone https://github.com/nollidnosnhoj/kickstart.nvim $HOME/.config/nvim
 echo "Run 'nvim' to install neovim plugins."
 
-echo "Switching to zsh..."
-chsh -s /bin/zsh
+if [ ! -f /bin/zsh ]; then
+    echo "Switching to zsh..."
+    chsh -s /bin/zsh
+fi
 
 echo "Development installation completed!"
