@@ -5,7 +5,7 @@ DOTFILES_DIR=$HOME/.dotfiles
 TEMP_DIR=$DOTFILES_DIR/.tmp
 LOG_FILE="arch_install_$(date '+%Y-%m-%d %H:%M:%S').log"
 
-STOW_PATHS="fastfetch,git,gowall,gtk,hypr,kitty,mise,oh-my-posh,qt,rofi,swaync,walker,waybar,waypaper,wlogout,zsh"
+STOW_PATHS="fastfetch,gowall,gtk,hypr,kitty,mise,oh-my-posh,qt,swaync,walker,waybar,waypaper,wlogout,zsh"
 
 CORE_PACKAGES=(
     archlinux-keyring
@@ -26,6 +26,7 @@ CORE_PACKAGES=(
     networkmanager
     brightnessctl
     playerctl
+    uwsm
 )
 
 FONT_PACKAGES=(
@@ -58,12 +59,10 @@ HYPR_EXTRA_PACKAGES=(
     swaync
     grim
     slurp
-    wofi
-    rofi-wayland
+    swww
     nwg-look
     nwg-displays
     waybar
-    hyprpaper
     imagemagick
     hypridle
     hyprlock
@@ -71,7 +70,6 @@ HYPR_EXTRA_PACKAGES=(
     qt6ct
     kvantum
     zsh
-    firefox
     man-db
     man-pages
     udiskie
@@ -95,6 +93,7 @@ AUR_PACKAGES=(
     waypaper
     waybar-updates
     vscodium-bin
+    zen-browser-bin
 )
 
 DEV_PACKAGES=(
@@ -107,10 +106,6 @@ DEV_PACKAGES=(
     fzf
     github-cli
     lazygit
-)
-
-EXTRA_PACKAGES=(
-    mullvad-vpn
 )
 
 REMOVED_PACKAGES=(
@@ -183,11 +178,10 @@ stow_dotfiles() {
 
     echo "Symlinking dotfiles from $DOTFILES_DIR to $HOME..."
 
-    rm ~/.gitconfig
-
     for folder in $(echo $STOW_PATHS | sed "s/,/ /g"); do
         echo "stow $folder"
         stow -D $folder
+        rm -rf $XDG_CONFIG_HOME/$folder
         stow $folder 
         
         # Check exit status
@@ -230,7 +224,18 @@ enabling_services() {
     sudo systemctl enable --now swayosd-libinput-backend.service
 }
 
-install() {
+install_greetd() {
+    echo "Installing greetd login manager"
+    sudo pacman -S --needed --noconfirm greetd greetd-tuigreet
+
+    echo "Copying configuration to /etc/greetd/config.toml"
+    sudo cp -rf $DOTFILES_DIR/greetd/config.toml /etc/greetd/config.toml
+
+    echo "Enabling greetd service"
+    sudo systemctl enable greetd.service
+}
+
+main() {
     # checks if the current working directory is the correct dotfiles path...
     if [ $(pwd) != $DOTFILES_DIR ]; then
         echo "The current directory must be in $DOTFILES_DIR"
@@ -245,13 +250,16 @@ install() {
 
     echo "Installing my arch linux dotfiles..."
 
+    echo "Copying Git configuration..."
+    if [ ! -f $HOME/.gitconfig ]; then
+        rm $HOME/.gitconfig
+    fi
+    cp ./git/.gitconfig $HOME/.gitconfig
+
     if ! command -v git &> /dev/null; then
         echo "Git was not installed... Installing git..."
         sudo pacman -S --needed --noconfirm git base-devel
     fi
-
-    echo "Enhancing git..."
-    git config --global http.postBuffer 157286400
 
     echo "Configuring pacman..."
     sudo sed -i 's/^#Color/Color/; s/^#VerbosePkgLists/VerbosePkgLists/; s/^#ParallelDownloads = 5/ParallelDownloads = 5/' /etc/pacman.conf
@@ -316,22 +324,7 @@ install() {
     sudo pacman -S --needed "${DEV_PACKAGES[@]}"
 
     enabling_services
-
-    is_install_greetd=$(ask_yes_no "Install greetd login manager?")
-
-    if $is_install_greetd; then
-        echo "Installing greetd login manager"
-        sudo pacman -S --needed --noconfirm greetd greetd-tuigreet
-
-        echo "Copying configuration to /etc/greetd/config.toml"
-        sudo cp -rf $DOTFILES_DIR/greetd/config.toml /etc/greetd/config.toml
-
-        echo "Enabling greetd service"
-        sudo systemctl enable greetd.service
-    else
-        echo "No login manager installed... You will need to install a login manager manually."
-        sleep 4
-    fi
+    install_greetd
 
     # Ask about using a laptop
     if ask_yes_no "Are you using a laptop?"; then
@@ -343,11 +336,6 @@ install() {
 
         echo "Autostarting Libinput Gestures"
         libinput-gestures-setup autostart
-
-        if $is_install_greetd; then
-            echo "Note: Greetd does not support fingerprint authentication. You may want to use a different login manager, like SDDM"
-            sleep 4
-        fi
     else
         echo "Laptop installation skipped installation skipped."
         sleep 1
@@ -367,4 +355,4 @@ install() {
 if [ ! -f ./arch_install.log ]; then
     touch ./arch_install.log
 fi
-install | tee arch_install.log
+main | tee arch_install.log
