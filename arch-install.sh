@@ -209,7 +209,7 @@ main() {
     sudo usermod -a -G input "$USER"
     sudo gpasswd -a $USER input
 
-    source $DOTFILES_DIR/dev-install.sh
+    source $DOTFILES_DIR/cli-install.sh
 
     enabling_services
     install_greetd
