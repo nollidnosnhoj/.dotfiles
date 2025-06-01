@@ -9,8 +9,6 @@ if ! command -v stow $> /dev/null; then
     sudo pacman -S --needed --noconfirm stow
 fi
 
-local log_file=$CURRENT_DIR/stow_arch_output.log
-
 echo "Symlinking dotfiles from $CURRENT_DIR to $HOME..."
 
 for folder in $(echo $STOW_PATHS | sed "s/,/ /g"); do
