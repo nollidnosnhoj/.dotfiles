@@ -23,6 +23,9 @@ source $SCRIPTS_DIR/yay.sh
 echo "Installing development packages..."
 yay -S --needed --noconfirm "${DEV_PACKAGES[@]}"
 
+echo "Stowing dotfiles..."
+source $SCRIPTS_DIR/stow.sh $STOW_PATHS
+
 echo "Installing tools using mise..."
 mise install
 
