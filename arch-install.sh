@@ -111,6 +111,7 @@ DEV_PACKAGES=(
 REMOVED_PACKAGES=(
     dunst
     dolphin
+    polkit-kde-agent
     wofi
 )
 
