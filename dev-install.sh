@@ -29,11 +29,15 @@ source $SCRIPTS_DIR/stow.sh $STOW_PATHS
 echo "Installing tools using mise..."
 mise install
 
-echo "Installing neovim configuration..."
-git clone https://github.com/nollidnosnhoj/kickstart.nvim $HOME/.config/nvim
-echo "Run 'nvim' to install neovim plugins."
+if [ ! -d $HOME/.config/nvim ]; then
+    echo "Installing neovim configuration..."
+    git clone https://github.com/nollidnosnhoj/kickstart.nvim $HOME/.config/nvim
+    echo "Run 'nvim' to install neovim plugins."
+fi
 
-if [ ! -f /bin/zsh ]; then
+if [[ "$SHELL" == *"/zsh" ]]; then
+  echo "The login shell is already /bin/zsh"
+else
     echo "Switching to zsh..."
     chsh -s /bin/zsh
 fi

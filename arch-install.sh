@@ -5,7 +5,7 @@ DOTFILES_DIR=$HOME/.dotfiles
 SCRIPTS_DIR=$DOTFILES_DIR/.scripts
 TEMP_DIR=$DOTFILES_DIR/.tmp
 LOG_FILE="arch_install_$(date '+%Y-%m-%d %H:%M:%S').log"
-STOW_PATHS="fastfetch,gowall,gtk,hypr,kitty,qt,swaync,walker,waybar,waypaper,wlogout"
+STOW_PATHS="fastfetch,gowall,gtk,hypr,kitty,qt,swaync,walker,waybar,waypaper,wlogout,zsh2"
 
 source $SCRIPTS_DIR/utils.sh
 
