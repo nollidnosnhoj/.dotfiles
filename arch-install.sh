@@ -2,10 +2,12 @@
 
 XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 DOTFILES_DIR=$HOME/.dotfiles
+SCRIPTS_DIR=$DOTFILES_DIR/.scripts
 TEMP_DIR=$DOTFILES_DIR/.tmp
 LOG_FILE="arch_install_$(date '+%Y-%m-%d %H:%M:%S').log"
+STOW_PATHS="fastfetch,gowall,gtk,hypr,kitty,qt,swaync,walker,waybar,waypaper,wlogout"
 
-STOW_PATHS="fastfetch,gowall,gtk,hypr,kitty,mise,oh-my-posh,qt,swaync,walker,waybar,waypaper,wlogout,zsh"
+source $SCRIPTS_DIR/utils.sh
 
 CORE_PACKAGES=(
     archlinux-keyring
@@ -96,104 +98,12 @@ AUR_PACKAGES=(
     zen-browser-bin
 )
 
-DEV_PACKAGES=(
-    zsh
-    oh-my-posh
-    mise
-    neovim-git
-    zoxide
-    eza
-    fzf
-    github-cli
-    lazygit
-)
-
 REMOVED_PACKAGES=(
     dunst
     dolphin
     polkit-kde-agent
     wofi
 )
-
-# Function to ask yes or no questions
-ask_yes_no() {
-    while true; do
-        read -p "$1 (Yy/Nn): " response
-        case $response in
-            [Yy]* ) return 0;;
-            [Nn]* ) return 1;;
-            * ) echo "Please answer with y or n.";;
-        esac
-    done
-}
-
-# Function to check and enable multilib repository
-enable_multilib() {
-    if ! grep -q "^\[multilib\]" /etc/pacman.conf; then
-        echo "Enabling multilib repository..."
-        sudo tee -a /etc/pacman.conf > /dev/null <<EOT
-
-[multilib]
-Include = /etc/pacman.d/mirrorlist
-EOT
-        echo "Multilib repository has been enabled."
-    else
-        echo "Multilib repository is already enabled."
-    fi
-}
-
-install_yay() {
-    if ! command -v yay &> /dev/null; then
-        echo "Installing yay..."
-        sudo pacman -S --needed --noconfirm git base-devel
-        git clone https://aur.archlinux.org/yay.git
-        cd yay
-        makepkg -si
-        cd .. && rm -rf yay
-        export PATH="$PATH:$HOME/.local/bin"
-    else
-        echo "yay is already installed."
-    fi
-}
-
-enable_chaotic_aur() {
-    if grep -q "\[chaotic-aur\]" /etc/pacman.conf; then
-        echo "Chaotic AUR is already enabled."
-    else
-        echo "Enabling Chaotic AUR..."
-        sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
-        sudo pacman-key --lsign-key 3056513887B78AEB
-        sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'
-        sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'
-        echo -e '\n[chaotic-aur]\nInclude = /etc/pacman.d/chaotic-mirrorlist' | sudo tee -a /etc/pacman.conf
-        sudo pacman -Sy
-    fi
-}
-
-# Symlink dotfiles using GNU Stow
-stow_dotfiles() {
-    echo "Installing stow..."
-    sudo pacman -S --needed --noconfirm stow
-
-    local log_file=$DOTFILES_DIR/stow_arch_output.log
-
-    echo "Symlinking dotfiles from $DOTFILES_DIR to $HOME..."
-
-    for folder in $(echo $STOW_PATHS | sed "s/,/ /g"); do
-        echo "stow $folder"
-        stow -D $folder
-        rm -rf $XDG_CONFIG_HOME/$folder
-        stow $folder 
-        
-        # Check exit status
-        if [[ ${PIPESTATUS[0]} -ne 0 ]]; then
-            echo "Stow failed to symlink files."
-            exit
-        fi
-    done
-
-    echo "Dotfiles symlinked successfully"
-}
 
 install_gtk_icons_and_themes() {
     echo "Installing GTK icons..."
@@ -251,26 +161,17 @@ main() {
 
     echo "Installing my arch linux dotfiles..."
 
-    echo "Copying Git configuration..."
-    if [ ! -f $HOME/.gitconfig ]; then
-        rm $HOME/.gitconfig
-    fi
-    cp ./git/.gitconfig $HOME/.gitconfig
-
-    if ! command -v git &> /dev/null; then
-        echo "Git was not installed... Installing git..."
-        sudo pacman -S --needed --noconfirm git base-devel
-    fi
+    source $SCRIPTS_DIR/git_setup.sh
 
     echo "Configuring pacman..."
     sudo sed -i 's/^#Color/Color/; s/^#VerbosePkgLists/VerbosePkgLists/; s/^#ParallelDownloads = 5/ParallelDownloads = 5/' /etc/pacman.conf
 
-    enable_multilib
-    install_yay
-    enable_chaotic_aur
+    source $SCRIPTS_DIR/multilib.sh
+    source $SCRIPTS_DIR/yay.sh
+    source $SCRIPTS_DIR/chaotic_aur.sh
 
     if ask_yes_no "Add cachy_os repositories? [NOTE] This would modify pacman."; then
-        source ./.scripts/cachyos_repos.sh
+        source $SCRIPTS_DIR/cachyos_repos.sh
     fi
 
     echo "Reducing package compression time..."
@@ -291,16 +192,13 @@ main() {
     echo "Installing AUR packages..."
     yay -S --needed --noconfirm "${AUR_PACKAGES[@]}"
 
-    echo "Installing development packages..."
-    yay -S --needed --noconfirm "${DEV_PACKAGES[@]}"
-
     echo "Removing packages from archinstall"
     sudo pacman -Rs "${REMOVED_PACKAGES[@]}"
 
     echo "Modifying scripts' permissions for execution"
     chmod +x $DOTFILES_DIR/.config/hypr/scripts/*.sh
 
-    stow_dotfiles
+    source $SCRIPTS_DIR/stow.sh $STOW_PATHS
     install_gtk_icons_and_themes
 
     echo "Setting up wallpapers directory..."
@@ -311,18 +209,7 @@ main() {
     sudo usermod -a -G input "$USER"
     sudo gpasswd -a $USER input
 
-    echo "Installing tools using mise..."
-    mise install
-
-    echo "Installing neovim configuration..."
-    git clone https://github.com/nollidnosnhoj/kickstart.nvim $HOME/.config/nvim
-    echo "Run 'nvim' to install neovim plugins."
-
-    echo "Switching to zsh..."
-    chsh -s /bin/zsh
-
-    echo "Installing extra packages..."
-    sudo pacman -S --needed "${DEV_PACKAGES[@]}"
+    source $DOTFILES_DIR/dev-install.sh
 
     enabling_services
     install_greetd
