@@ -6,7 +6,7 @@ if ! command -v git &> /dev/null; then
 fi
 
 echo "Copying Git configuration..."
-if [ ! -f $HOME/.gitconfig ]; then
+if [ -f $HOME/.gitconfig ]; then
     rm $HOME/.gitconfig
 fi
 cp ./git/.gitconfig $HOME/.gitconfig
