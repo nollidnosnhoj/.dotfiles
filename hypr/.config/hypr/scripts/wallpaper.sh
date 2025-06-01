@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 default_dir="$HOME/Pictures/Wallpapers/.defaults"
 wallpaper_cache_dir="$HOME/Pictures/Wallpapers/.defaults"
 blurred_wallpaper="$default_dir/blurred-wallpaper.png"

@@ -29,6 +29,7 @@ CORE_PACKAGES=(
     brightnessctl
     playerctl
     uwsm
+    libnewt
 )
 
 FONT_PACKAGES=(
